@@ -1,12 +1,13 @@
 import numpy as np
 
 
-initial_prob = np.array([0.4, 0.6])
-step_matrix = np.array([[0.5, 0.5],
-                        [0.3, 0.7]])
+initial_prob = np.array([0.6, 0.4])  # state1, state2
+step_matrix = np.array([[0.7, 0.3],
+                        [0.1, 0.9]])
 
-s1_var = [(10, 2), (5, 4)]
-s2_var = [(4, 1), (5, 1)]
+
+s1_var = [(10, 2), (5, 4)]  # variables on state1
+s2_var = [(4, 1), (5, 1)]  # variables on state2
 state_variables = [s1_var, s2_var]
 
 
@@ -30,7 +31,7 @@ def generate_data(num):
     return data
 
 
-
-d = generate_data(5)
-print(d)
+if __name__ == "__main__":
+    d = generate_data(5)
+    print(d)
 
