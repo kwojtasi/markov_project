@@ -1,18 +1,36 @@
 import numpy as np
 
+# NUMBER_OF_STATES = 2
+# initial_prob = np.array([0.4, 0.6])  # state1, state2
+# step_matrix = np.array([[0.6, 0.4],
+#                         [0.1, 0.9]])
+#
+#
+# # Here variables for each state:
+#
+# s1_var = [(10, 1), (10, 1)]  # variables on state1
+# s2_var = [(10, 1), (10, 1)]  # variables on state2
+# state_variables = [s1_var, s2_var]
 
-initial_prob = np.array([0.6, 0.4])  # state1, state2
-step_matrix = np.array([[0.7, 0.3],
-                        [0.1, 0.9]])
+
+NUMBER_OF_STATES = 3
+initial_prob = np.array([0.7, 0.2, 0.1])  # state1, state2
+step_matrix = np.array([[0.6, 0.3, 0.1],
+                        [0.1, 0.2, 0.7],
+                        [0.3, 0.3, 0.4]
+                        ])
 
 
-s1_var = [(10, 2), (5, 4)]  # variables on state1
-s2_var = [(4, 1), (5, 1)]  # variables on state2
-state_variables = [s1_var, s2_var]
+# Here variables for each state:
+
+s1_var = [(10, 1), (10, 1)]  # variables on state1
+s2_var = [(2, 1), (2, 1)]  # variables on state2
+s3_var = [(10, 1), (10, 1)]
+state_variables = [s1_var, s2_var, s3_var]
 
 
 def step(step_matrix, curr_state):
-    next_state = np.random.choice(2, size=None, p=step_matrix[curr_state])
+    next_state = np.random.choice(NUMBER_OF_STATES, size=None, p=step_matrix[curr_state])
     return next_state
 
 
@@ -22,7 +40,7 @@ def generate_state_vars(variables):
 
 def generate_data(num):
     data = []
-    curr_state = np.random.choice(2, size=None, p=initial_prob)
+    curr_state = np.random.choice(NUMBER_OF_STATES, size=None, p=initial_prob)
     for _ in range(num):
         state_vars = generate_state_vars(state_variables[curr_state])
         data.append([curr_state, state_vars])
