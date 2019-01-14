@@ -1,7 +1,7 @@
 import numpy as np
 from generate_data import generate_data, NUMBER_OF_STATES
 from sklearn.neighbors import KNeighborsClassifier
-
+import matplotlib.pyplot as plt
 
 class MarkovChain:
     def __init__(self, data, states_num=2, chain_len=10):
@@ -59,27 +59,73 @@ class MarkovChain:
 
 
 if __name__ == "__main__":
-    chain_len = 10
-    data = [generate_data(chain_len) for i in range(1000)]
-    mc = MarkovChain(data, states_num=NUMBER_OF_STATES, chain_len=chain_len)
-    print("Gathered initial prob = \n {} \n".format(mc.initial_prob))
-    print("Gathered step matrix = \n {} \n".format(mc.step_matrix))
 
-    print("Probability for ending in states after{} steps = \n{}\n".format(chain_len, mc.gen_chain_prob()))
+    chain_len = 10
 
     test = [generate_data(chain_len) for i in range(100)]
-    out = mc.predict(test)
-    # print(out)
-    X_te = [s[1] for states in test for s in states]
-    y_te = [[s[0] for s in states] for states in test]
-    # print(y_te)
 
-    res = np.equal(out, y_te)
-    acc = np.sum(res) / np.size(res)
-    print("Accuracy is {}".format(acc))
 
-    knn_out = mc.KNN.predict(X_te)
-    knn_res = np.equal(np.array(y_te).flatten(), knn_out)
-    knn_acc = np.sum(knn_res) / np.size(knn_res)
-    print("Accuracy for KNN is {}".format(knn_acc))
+    test_data_to_plot = [[] for _ in range(NUMBER_OF_STATES)]
     
+    for test_sample in test:
+
+        for state in test_sample:
+
+            test_data_to_plot[state[0]].append(state[1])
+
+    test_data_to_plot = [np.array(state) for state in test_data_to_plot]
+    
+    plt.subplot(211)
+    
+    for i in range(NUMBER_OF_STATES):
+
+        plt.plot(test_data_to_plot[i][:, 0], test_data_to_plot[i][:, 1], ".")
+
+    plt.legend(["stan1", "stan2", "stan3"])
+    plt.ylabel("cecha1")
+    plt.xlabel("cecha2")
+    
+    accuracies = []
+    accuracies_knn = []
+    learning_set_sizes = [10, 100, 1000, 10000, 100000]
+    
+    for n in learning_set_sizes:
+    
+        data = [generate_data(chain_len) for i in range(n)]
+        mc = MarkovChain(data, states_num=NUMBER_OF_STATES, chain_len=chain_len)
+        # print("Gathered initial prob = \n {} \n".format(mc.initial_prob))
+        # print("Gathered step matrix = \n {} \n".format(mc.step_matrix))
+
+        # print("Probability for ending in states after {} steps = \n{}\n".format(chain_len, mc.gen_chain_prob()))
+        
+        out = mc.predict(test)
+        # print(out)
+        X_te = [s[1] for states in test for s in states]
+        y_te = [[s[0] for s in states] for states in test]
+        # print(y_te)
+
+        res = np.equal(out, y_te)
+        acc = np.sum(res) / np.size(res)
+        print("Accuracy is {}".format(acc))
+        
+        knn_out = mc.KNN.predict(X_te)
+        knn_res = np.equal(np.array(y_te).flatten(), knn_out)
+        knn_acc = np.sum(knn_res) / np.size(knn_res)
+        print("Accuracy for KNN is {}".format(knn_acc))
+        
+        already_plotted = np.zeros(NUMBER_OF_STATES)
+        test_data_to_plot = [[] for _ in range(NUMBER_OF_STATES)]
+
+        accuracies.append(acc)
+        accuracies_knn.append(knn_acc)
+
+    plt.subplot(212)
+
+    plt.semilogx(learning_set_sizes, accuracies, ".")
+    plt.semilogx(learning_set_sizes, accuracies_knn, ".")
+    plt.grid(True)
+    plt.legend(["acc", "acc_knn"])
+    plt.ylabel("Dokładność klasyfikacji")
+    plt.xlabel("Długość ciągu uczącego")
+        
+    plt.show()

@@ -23,9 +23,9 @@ step_matrix = np.array([[0.6, 0.3, 0.1],
 
 # Here variables for each state:
 
-s1_var = [(10, 1), (10, 1)]  # variables on state1
-s2_var = [(2, 1), (2, 1)]  # variables on state2
-s3_var = [(10, 1), (10, 1)]
+s1_var = [(5, 2), (-10, 2)]  # variables on state1
+s2_var = [(5, 2), (-2, 2)]  # variables on state2
+s3_var = [(13, 2), (-6, 2)]
 state_variables = [s1_var, s2_var, s3_var]
 
 
